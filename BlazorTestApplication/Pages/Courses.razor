@@ -1,0 +1,41 @@
+﻿@page "/courses"
+
+@using BlazorTestApplication.Data.Model
+@using BlazorTestApplication.Data
+@inject OtusService OtusService
+
+<h1>Courses</h1>
+
+@if (courses == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var course in courses)
+            {
+                <tr>
+                    <td>@course.Course_Id</td>
+                    <td>@course.CourseName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Course> courses;
+
+    protected override async Task OnInitializedAsync()
+    {
+        courses = await OtusService.GetCoursesAsync();
+    }
+}

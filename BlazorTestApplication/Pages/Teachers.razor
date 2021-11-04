@@ -1,0 +1,47 @@
+﻿@page "/teachers"
+
+@using BlazorTestApplication.Data.Model
+@using BlazorTestApplication.Data
+@inject OtusService OtusService
+
+<h1>Teachers</h1>
+
+@if (teachers == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Last Name</th>
+                <th>First Name</th>
+                <th>Middle Name</th>
+                <th>Course</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var teacher in teachers)
+            {
+                <tr>
+                    <td>@teacher.Teacher_Id</td>
+                    <td>@teacher.LastName</td>
+                    <td>@teacher.FirstName</td>
+                    <td>@teacher.MiddleName</td>
+                    <td>@teacher.Course.CourseName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Teacher> teachers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        teachers = await OtusService.GetTeachersAsync();
+    }
+}
