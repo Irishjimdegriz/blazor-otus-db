@@ -49,5 +49,22 @@ namespace BlazorTestApplication.DAL
                 NHibernateHelper.CloseSession();
             }
         }
+
+        public Teacher InsertTeacher(Teacher teacher, int courseId)
+        {
+            ISession session = NHibernateHelper.GetCurrentSession();
+
+            using (ITransaction tx = session.BeginTransaction())
+            {
+                var selectedCourse = session.Query<Course>().FirstOrDefault(x => x.Course_Id == courseId);
+
+                selectedCourse.AddTeacher(teacher);
+                session.SaveOrUpdate(selectedCourse);
+
+                tx.Commit();
+            }
+
+            return teacher;
+        }
     }
 }

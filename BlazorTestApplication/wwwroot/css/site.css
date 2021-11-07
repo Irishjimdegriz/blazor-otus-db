@@ -48,3 +48,18 @@ a, .btn-link {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+.top-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.teacher-form__label {
+    display: flex;
+    justify-content: space-between;
+}
+
+.teacher-form__input {
+    width: 60%;
+}

@@ -1,0 +1,61 @@
+﻿@inject OtusService OtusService
+
+@if (Courses == null)
+{
+    <p>
+        <em>Loading ...</em>
+    </p>
+}
+else
+{
+    <EditForm Model="Teacher" class="teacher-form">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <label class="teacher-form__label">
+            <div>Last name:</div>
+            <InputText @bind-Value="Teacher.LastName" class="teacher-form__input"/>
+        </label>
+        <label class="teacher-form__label">
+            <div>First name:</div>
+            <InputText @bind-Value="Teacher.FirstName" class="teacher-form__input"/>
+        </label>
+        <label class="teacher-form__label">
+            <div>Middle name:</div>
+            <InputText @bind-Value="Teacher.MiddleName" class="teacher-form__input"/>
+        </label>
+        <label class="teacher-form__label">
+            <div>Course:</div>
+            <InputSelect @bind-Value="Teacher.CourseId" class="teacher-form__input">
+                <option value=""></option>
+                @foreach (var course in Courses)
+                    {
+                        <option value="@course.Course_Id"> @course.CourseName</option>
+                    }
+            </InputSelect>
+        </label>
+        
+        <button @onclick="SaveTeacher" class="btn btn-primary">Submit</button>
+        <button @onclick="ModalInstance.CancelAsync" class="btn btn-secondary">Cancel</button>
+    </EditForm>
+}
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; }
+
+    [Parameter] public List<Course> Courses { get; set; }
+
+    TeacherModel Teacher { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Teacher = new TeacherModel();
+    }
+
+    void SaveTeacher()
+    {
+        Teacher = OtusService.SaveTeacherAsync(Teacher).Result;
+        ModalInstance.CloseAsync(ModalResult.Ok<TeacherModel>(Teacher));
+    }
+
+}

@@ -1,10 +1,12 @@
 ﻿@page "/teachers"
 
-@using BlazorTestApplication.Data.Model
-@using BlazorTestApplication.Data
 @inject OtusService OtusService
 
-<h1>Teachers</h1>
+<div class="top-container">
+    <h1>Teachers</h1> 
+    <button class="btn btn-dark" @onclick="() => ShowAddTeacher()">Add teacher</button>
+</div>
+
 
 @if (teachers == null)
 {
@@ -30,7 +32,7 @@ else
                     <td>@teacher.LastName</td>
                     <td>@teacher.FirstName</td>
                     <td>@teacher.MiddleName</td>
-                    <td>@teacher.Course.CourseName</td>
+                    <td>@teacher.CourseName</td>
                 </tr>
             }
         </tbody>
@@ -38,10 +40,30 @@ else
 }
 
 @code {
-    private List<Teacher> teachers;
+    [CascadingParameter] public IModalService Modal { get; set; }
+
+    private List<TeacherModel> teachers;
 
     protected override async Task OnInitializedAsync()
     {
         teachers = await OtusService.GetTeachersAsync();
+    }
+
+    protected async void ShowAddTeacher()
+    {
+        var courses = await OtusService.GetCoursesAsync();
+
+        var parameters = new ModalParameters();
+        parameters.Add("Courses", courses);
+
+        var addTeacherForm = Modal.Show<TeachersForm>("Add Teacher", parameters);
+
+        var result = await addTeacherForm.Result;
+
+        if (!result.Cancelled && result.Data != null)
+        {
+            teachers.Add((TeacherModel)result.Data);
+            StateHasChanged();
+        }
     }
 }

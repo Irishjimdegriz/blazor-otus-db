@@ -1,3 +1,4 @@
+using Blazored.Modal;
 using BlazorTestApplication.DAL;
 using BlazorTestApplication.Data;
 using BlazorTestApplication.Data.Configuration;
@@ -31,6 +32,7 @@ namespace BlazorTestApplication
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<OtusService>();
+            services.AddBlazoredModal();
 
             services.AddOptions()
                 .Configure<ConnectionStringConfiguration>(Configuration.GetSection(ConfigurationContstants.CONNECTION_STRING_SECTION));
